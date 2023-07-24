@@ -25,7 +25,7 @@
         inputs.treefmt-nix.flakeModule
       ];
 
-      perSystem = { config, ... }: {
+      perSystem = { config, pkgs, lib, ... }: {
         treefmt = {
           projectRootFile = "flake.nix";
           programs.mdsh.enable = true;
@@ -35,6 +35,18 @@
           programs.prettier.enable = true;
           settings.formatter.prettier.options = [ "--prose-wrap" "always" ];
           settings.formatter.shellcheck.options = [ "-s" "bash" ];
+          settings.formatter.python = {
+            command = "sh";
+            options = [
+              "-eucx"
+              ''
+                ${lib.getExe pkgs.ruff} --fix "$@"
+                ${lib.getExe pkgs.black} "$@"
+              ''
+              "--" # this argument is ignored by bash
+            ];
+            includes = [ "*.py" ];
+          };
         };
         formatter = config.treefmt.build.wrapper;
       };
