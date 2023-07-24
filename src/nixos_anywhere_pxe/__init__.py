@@ -21,6 +21,7 @@ FILE = Union[None, int, IO]
 
 NIXOS_ANYWHERE_SH = Path(__file__).parent.absolute() / "src/nixos-anywhere.sh"
 
+
 def run(
     cmd: Union[str, list[str]],
     input: Optional[str] = None,
@@ -384,13 +385,14 @@ def build_pxe_image(netboot_image_flake: str) -> Path:
     )
     return Path(res.stdout.strip())
 
+
 def pause():
     print("")
     # no clue how to flush stdin with python. Gonna wait for a specific string instead (as opposed to wait for [enter]).
     answer = ""
-    while (answer != "continue"):
+    while answer != "continue":
         answer = input(
-                "Answer 'continue' to terminate this script and tear down the network to the server: "
+            "Answer 'continue' to terminate this script and tear down the network to the server: "
         )
 
 
